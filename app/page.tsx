@@ -1,12 +1,17 @@
-export default function Home() {
+import { Header } from "@/components/header"
+import { ArticleCard } from "@/components/article-card"
+import { articles } from "@/lib/articles"
+
+export default function HomePage() {
   return (
     <div className="min-h-screen">
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-8">나지금 뉴스</h1>
-        <div className="grid gap-6">
-          {/* 기사 목록이 여기에 표시됩니다 */}
-        </div>
+      <Header />
+
+      <main className="h-screen pt-16 overflow-y-scroll snap-y snap-mandatory scroll-smooth">
+        {articles.map((article) => (
+          <ArticleCard key={article.id} article={article} />
+        ))}
       </main>
     </div>
-  );
+  )
 }
