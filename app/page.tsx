@@ -7,7 +7,8 @@ export default function HomePage() {
     <div className="min-h-screen">
       <Header />
 
-      <main className="h-screen pt-16 overflow-y-scroll snap-y snap-mandatory scroll-smooth">
+      <main className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth">
+        <div className="h-16" />
         {articles.map((article) => (
           <ArticleCard key={article.id} article={article} />
         ))}

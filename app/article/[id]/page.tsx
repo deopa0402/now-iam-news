@@ -1,22 +1,71 @@
-import { notFound } from "next/navigation"
+'use client'
+
+import { notFound, useParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, Calendar, Tag } from "lucide-react"
-import { articles } from "@/lib/articles"
+import { articles, type ContentBlock, type ImageMapping } from "@/lib/articles"
 import { Button } from "@/components/ui/button"
+import ArticleContent from "@/components/ArticleContent"
+import { FloatingButton } from "@/components/FloatingButton"
+import { LoadingOverlay } from "@/components/LoadingOverlay"
+import { useState } from "react"
 
-interface ArticlePageProps {
-  params: Promise<{
-    id: string
-  }>
+interface DragInfo {
+  blockIndex: number
+  selectedText: string
 }
 
-export default async function ArticlePage({ params }: ArticlePageProps) {
-  const { id } = await params
+export default function ArticlePage() {
+  const params = useParams()
+  const id = params.id as string
   const article = articles.find((a) => a.id === id)
+
+  const [contentBlocks, setContentBlocks] = useState<ContentBlock[]>(article?.contentBlocks || [])
+  const [showButton, setShowButton] = useState(false)
+  const [selectedBlockIndex, setSelectedBlockIndex] = useState<number | null>(null)
+  const [isGenerating, setIsGenerating] = useState(false)
 
   if (!article) {
     notFound()
+  }
+
+  const handleTextDragged = (info: DragInfo) => {
+    console.log('📢 페이지가 드래그 정보 받음:', info)
+    setShowButton(true)
+    setSelectedBlockIndex(info.blockIndex)
+  }
+
+  const handleGenerateImage = () => {
+    console.log('🖼️ 페이지에서 이미지 생성 시작')
+    if (selectedBlockIndex === null) return
+
+    const mapping = article.imageMappings?.find(m => m.blockIndex === selectedBlockIndex)
+    if (!mapping) return
+
+    setShowButton(false)
+    setIsGenerating(true)
+
+    setTimeout(() => {
+      const newBlocks = [...contentBlocks]
+      newBlocks.splice(selectedBlockIndex + 1, 0, {
+        type: 'image',
+        content: mapping.imageUrl,
+        alt: mapping.alt || '생성된 이미지'
+      })
+
+      console.log('✅ 페이지에서 이미지 블록 삽입 완료')
+      setContentBlocks(newBlocks)
+      setIsGenerating(false)
+      setSelectedBlockIndex(null)
+      window.getSelection()?.removeAllRanges()
+    }, 2000)
+  }
+
+  const handleSelectionCleared = () => {
+    console.log('🧹 선택 해제 - 버튼 숨김')
+    setShowButton(false)
+    setSelectedBlockIndex(null)
   }
 
   return (
@@ -66,13 +115,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </div>
 
             {/* Article Content */}
-            <div className="prose prose-lg max-w-none">
-              {article.content.split("\n\n").map((paragraph, index) => (
-                <p key={index} className="text-foreground leading-relaxed mb-6">
-                  {paragraph}
-                </p>
-              ))}
-            </div>
+            <ArticleContent
+              contentBlocks={contentBlocks}
+              imageMappings={article.imageMappings}
+              onTextDragged={handleTextDragged}
+              onSelectionCleared={handleSelectionCleared}
+            />
 
             {/* Article Footer */}
             <div className="pt-8 border-t border-border">
@@ -88,6 +136,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </div>
         </article>
       </main>
+
+      {/* Floating Button */}
+      <FloatingButton
+        visible={showButton}
+        onGenerate={handleGenerateImage}
+      />
+
+      {/* Loading Overlay */}
+      <LoadingOverlay visible={isGenerating} />
     </div>
   )
 }

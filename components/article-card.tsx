@@ -9,9 +9,9 @@ interface ArticleCardProps {
 
 export function ArticleCard({ article }: ArticleCardProps) {
   return (
-    <div className="h-screen w-full snap-start snap-always flex items-center justify-center px-4 py-24 bg-background">
+    <div className="h-screen w-full snap-start snap-always flex items-center justify-center px-4 pt-42 pb-24 bg-background">
       <Link href={`/article/${article.id}`} className="group max-w-5xl w-full">
-        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg mb-6">
+        <div className="relative aspect-video w-full overflow-hidden rounded-lg mb-6">
           <Image
             src={article.imageUrl || "/placeholder.svg"}
             alt={article.title}
