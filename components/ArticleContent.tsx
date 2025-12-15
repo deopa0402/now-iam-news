@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { Loader2, Sparkles } from 'lucide-react'
 
 interface ContentBlock {
-  type: 'paragraph' | 'image' | 'loading'
+  type: 'paragraph' | 'image' | 'loading' | 'subtitle'
   content: string
   alt?: string
   isGenerated?: boolean
@@ -90,6 +90,22 @@ export default function ArticleContent({ contentBlocks, imageMappings, onTextDra
             <p
               key={`paragraph-${index}-${block.content.substring(0, 20)}`}
               className="text-foreground leading-relaxed mb-6 cursor-text"
+              onMouseUp={() => handleTextSelection(index)}
+            >
+              {block.content}
+            </p>
+          )
+        }
+
+        if (block.type === 'subtitle') {
+          // 다음 블록이 subtitle이 아니면 mb-4 추가
+          const nextBlock = contentBlocks[index + 1]
+          const isLastSubtitle = nextBlock && nextBlock.type !== 'subtitle'
+
+          return (
+            <p
+              key={`subtitle-${index}-${block.content.substring(0, 20)}`}
+              className={`text-foreground leading-relaxed cursor-text ${isLastSubtitle ? 'mb-4' : ''}`}
               onMouseUp={() => handleTextSelection(index)}
             >
               {block.content}

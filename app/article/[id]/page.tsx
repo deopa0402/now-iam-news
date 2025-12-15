@@ -113,17 +113,6 @@ export default function ArticlePage() {
               <p className="text-xl text-muted-foreground leading-relaxed">{article.excerpt}</p>
             </div>
 
-            {/* Featured Image */}
-            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg">
-              <Image
-                src={article.imageUrl || "/placeholder.svg"}
-                alt={article.title}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-
             {/* Article Content */}
             <ArticleContent
               contentBlocks={contentBlocks}

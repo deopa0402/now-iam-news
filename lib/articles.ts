@@ -1,5 +1,5 @@
 export interface ContentBlock {
-  type: 'paragraph' | 'image' | 'loading'
+  type: 'paragraph' | 'image' | 'loading' | 'subtitle'
   content: string
   alt?: string
   isGenerated?: boolean // 생성된 이미지인지 여부 (보더 표시용)

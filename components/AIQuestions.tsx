@@ -182,7 +182,7 @@ export function AIQuestions({ predefined, customAnswerDemo }: AIQuestionsProps) 
                       {streamingExplanations[index] && (
                         <div className="pt-2 border-t border-slate-200">
                           <span className="font-bold text-slate-700 text-sm">해설:</span>{' '}
-                          <span className="text-slate-700 leading-relaxed text-sm">
+                          <span className="text-slate-700 leading-relaxed text-sm whitespace-pre-line">
                             {streamingExplanations[index]}
                           </span>
                         </div>
@@ -241,12 +241,6 @@ export function AIQuestions({ predefined, customAnswerDemo }: AIQuestionsProps) 
 
             {customAnswer && (
               <div className="mt-6 p-5 bg-white rounded-lg border-2 border-primary/30 shadow-sm space-y-3">
-                {/* 질문 */}
-                <div className="pb-2 border-b border-slate-200">
-                  <span className="text-sm font-bold text-slate-700">질문:</span>{' '}
-                  <span className="text-sm text-slate-600">{customQuestion}</span>
-                </div>
-
                 {/* 답 */}
                 <div>
                   <span className="font-bold text-primary text-base">답:</span>{' '}
@@ -257,7 +251,7 @@ export function AIQuestions({ predefined, customAnswerDemo }: AIQuestionsProps) 
                 {customExplanation && (
                   <div className="pt-2 border-t border-slate-200">
                     <span className="font-bold text-slate-700 text-sm">해설:</span>{' '}
-                    <span className="text-slate-700 leading-relaxed text-sm">
+                    <span className="text-slate-700 leading-relaxed text-sm whitespace-pre-line">
                       {customExplanation}
                     </span>
                   </div>
