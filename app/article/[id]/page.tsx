@@ -4,11 +4,10 @@ import { notFound, useParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, Calendar, Tag } from "lucide-react"
-import { articles, type ContentBlock, type ImageMapping } from "@/lib/articles"
+import { articles, type ContentBlock } from "@/lib/articles"
 import { Button } from "@/components/ui/button"
 import ArticleContent from "@/components/ArticleContent"
 import { FloatingButton } from "@/components/FloatingButton"
-import { LoadingOverlay } from "@/components/LoadingOverlay"
 import { AIQuestions } from "@/components/AIQuestions"
 import { Comments } from "@/components/Comments"
 import { useState } from "react"
@@ -26,7 +25,7 @@ export default function ArticlePage() {
   const [contentBlocks, setContentBlocks] = useState<ContentBlock[]>(article?.contentBlocks || [])
   const [showButton, setShowButton] = useState(false)
   const [selectedBlockIndex, setSelectedBlockIndex] = useState<number | null>(null)
-  const [isGenerating, setIsGenerating] = useState(false)
+  const [showAIQuestions, setShowAIQuestions] = useState(false)
 
   if (!article) {
     notFound()
@@ -46,20 +45,29 @@ export default function ArticlePage() {
     if (!mapping) return
 
     setShowButton(false)
-    setIsGenerating(true)
 
+    // 1단계: 로딩 블록 즉시 삽입
+    const newBlocksWithLoading = [...contentBlocks]
+    newBlocksWithLoading.splice(selectedBlockIndex + 1, 0, {
+      type: 'loading',
+      content: 'Generating image...'
+    })
+    setContentBlocks(newBlocksWithLoading)
+
+    // 2단계: 2초 후 로딩 블록을 이미지 블록으로 교체
     setTimeout(() => {
-      const newBlocks = [...contentBlocks]
-      newBlocks.splice(selectedBlockIndex + 1, 0, {
+      const newBlocksWithImage = [...newBlocksWithLoading]
+      newBlocksWithImage[selectedBlockIndex + 1] = {
         type: 'image',
         content: mapping.imageUrl,
-        alt: mapping.alt || '생성된 이미지'
-      })
+        alt: mapping.alt || '생성된 이미지',
+        isGenerated: true // 보더 표시를 위한 플래그
+      }
 
       console.log('✅ 페이지에서 이미지 블록 삽입 완료')
-      setContentBlocks(newBlocks)
-      setIsGenerating(false)
+      setContentBlocks(newBlocksWithImage)
       setSelectedBlockIndex(null)
+      setShowAIQuestions(true) // 차트 생성 완료 후 AI 질문 컴포넌트 표시
       window.getSelection()?.removeAllRanges()
     }, 2000)
   }
@@ -88,16 +96,16 @@ export default function ArticlePage() {
           <div className="space-y-8">
             {/* Article Header */}
             <div className="space-y-6">
-              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-3 text-sm">
+                <div className="flex items-center gap-2 text-slate-600">
                   <Calendar className="w-4 h-4" />
                   <span>{article.date}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Tag className="w-4 h-4" />
-                  <span className="text-secondary font-medium">{article.category}</span>
-                </div>
-                <span className="text-secondary font-medium">{article.source}</span>
+                <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 rounded-full font-medium">
+                  <Tag className="w-3.5 h-3.5" />
+                  {article.category}
+                </span>
+                <span className="text-secondary font-semibold">{article.source}</span>
               </div>
 
               <h1 className="text-4xl md:text-5xl font-bold leading-tight text-balance">{article.title}</h1>
@@ -138,11 +146,13 @@ export default function ArticlePage() {
           </div>
         </article>
 
-        {/* AI Questions Section */}
-        <AIQuestions
-          predefined={article.aiQuestions?.predefined}
-          customAnswerDemo={article.aiQuestions?.customAnswerDemo}
-        />
+        {/* AI Questions Section - 차트 생성 후에만 표시 */}
+        {showAIQuestions && (
+          <AIQuestions
+            predefined={article.aiQuestions?.predefined}
+            customAnswerDemo={article.aiQuestions?.customAnswerDemo}
+          />
+        )}
 
         {/* Comments Section */}
         <Comments comments={article.comments} />
@@ -153,9 +163,6 @@ export default function ArticlePage() {
         visible={showButton}
         onGenerate={handleGenerateImage}
       />
-
-      {/* Loading Overlay */}
-      <LoadingOverlay visible={isGenerating} />
     </div>
   )
 }

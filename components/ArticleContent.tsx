@@ -2,11 +2,13 @@
 
 import Image from 'next/image'
 import { useEffect } from 'react'
+import { Loader2, Sparkles } from 'lucide-react'
 
 interface ContentBlock {
-  type: 'paragraph' | 'image'
+  type: 'paragraph' | 'image' | 'loading'
   content: string
   alt?: string
+  isGenerated?: boolean
 }
 
 interface ImageMapping {
@@ -94,6 +96,30 @@ export default function ArticleContent({ contentBlocks, imageMappings, onTextDra
             </p>
           )
         }
+
+        if (block.type === 'loading') {
+          return (
+            <div key={`loading-${index}`} className="my-8 p-8 border-2 border-dashed border-primary/20 rounded-lg bg-primary/5">
+              <div className="flex flex-col items-center gap-4">
+                <div className="flex items-center gap-3">
+                  <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                  <Sparkles className="w-5 h-5 text-accent animate-pulse" />
+                </div>
+                <div className="text-center space-y-1">
+                  <p className="font-semibold text-slate-900">이미지 생성 중...</p>
+                  <p className="text-sm text-slate-600">AI가 분석하고 있습니다</p>
+                </div>
+                {/* 스켈레톤 바 */}
+                <div className="w-full max-w-md space-y-2">
+                  <div className="h-2 bg-primary/30 rounded-full animate-pulse" />
+                  <div className="h-2 bg-primary/25 rounded-full animate-pulse" style={{ animationDelay: '0.15s' }} />
+                  <div className="h-2 bg-primary/20 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }} />
+                </div>
+              </div>
+            </div>
+          )
+        }
+
         if (block.type === 'image') {
           return (
             <div key={`image-${index}-${block.content}`} className="my-8">
@@ -102,7 +128,9 @@ export default function ArticleContent({ contentBlocks, imageMappings, onTextDra
                 alt={block.alt || '기사 이미지'}
                 width={800}
                 height={500}
-                className="rounded-lg w-full h-auto"
+                className={`rounded-lg w-full h-auto ${
+                  block.isGenerated ? 'border-2 border-primary/30 shadow-md shadow-primary/10' : ''
+                }`}
               />
             </div>
           )

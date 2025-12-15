@@ -1,7 +1,8 @@
 export interface ContentBlock {
-  type: 'paragraph' | 'image'
+  type: 'paragraph' | 'image' | 'loading'
   content: string
   alt?: string
+  isGenerated?: boolean // 생성된 이미지인지 여부 (보더 표시용)
 }
 
 export interface ImageMapping {
@@ -13,6 +14,7 @@ export interface ImageMapping {
 export interface AIQuestion {
   question: string
   answer: string
+  explanation: string
 }
 
 export interface Comment {
