@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button"
 import ArticleContent from "@/components/ArticleContent"
 import { FloatingButton } from "@/components/FloatingButton"
 import { LoadingOverlay } from "@/components/LoadingOverlay"
+import { AIQuestions } from "@/components/AIQuestions"
+import { Comments } from "@/components/Comments"
 import { useState } from "react"
 
 interface DragInfo {
@@ -135,6 +137,15 @@ export default function ArticlePage() {
             </div>
           </div>
         </article>
+
+        {/* AI Questions Section */}
+        <AIQuestions
+          predefined={article.aiQuestions?.predefined}
+          customAnswerDemo={article.aiQuestions?.customAnswerDemo}
+        />
+
+        {/* Comments Section */}
+        <Comments comments={article.comments} />
       </main>
 
       {/* Floating Button */}
