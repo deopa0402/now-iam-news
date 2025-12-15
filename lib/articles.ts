@@ -35,7 +35,10 @@ export interface Article {
   imageMappings?: ImageMapping[]
   aiQuestions?: {
     predefined: AIQuestion[]
-    customAnswerDemo: string
+    customAnswerDemo: {
+      answer: string
+      explanation: string
+    }
   }
   comments?: Comment[]
   source: string
