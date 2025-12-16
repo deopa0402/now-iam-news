@@ -12,14 +12,17 @@ export default function PDFButton({ button, scale, onClick }: PDFButtonProps) {
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   const handleClick = () => {
+    console.log('🎯 PDFButton clicked:', button.id)
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect()
-      onClick({
+      const position = {
         x: rect.left,
         y: rect.top,
         width: rect.width,
         height: rect.height,
-      })
+      }
+      console.log('📍 Button position:', position)
+      onClick(position)
     }
   }
 

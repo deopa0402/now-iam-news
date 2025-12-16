@@ -37,7 +37,11 @@ export default function PDFPage() {
   // 각 버튼의 화면 좌표 저장
   const [buttonPositions, setButtonPositions] = useState<Record<string, ButtonPosition>>({})
 
+  console.log('🏠 PDFPage render:', { openPanels, buttonPositionsCount: Object.keys(buttonPositions).length })
+
   const handleButtonClick = (button: PDFButton, screenPosition: { x: number; y: number; width: number; height: number }) => {
+    console.log('🔘 Button clicked:', { buttonId: button.id, screenPosition })
+
     // 버튼의 화면 좌표 저장
     setButtonPositions(prev => ({
       ...prev,
@@ -52,7 +56,14 @@ export default function PDFPage() {
 
     // 이미 열려있지 않은 경우에만 추가
     if (!openPanels.includes(button.id)) {
-      setOpenPanels(prev => [...prev, button.id])
+      console.log('➕ Adding panel to openPanels:', button.id)
+      setOpenPanels(prev => {
+        const newPanels = [...prev, button.id]
+        console.log('📋 New openPanels:', newPanels)
+        return newPanels
+      })
+    } else {
+      console.log('⚠️ Panel already open:', button.id)
     }
   }
 
@@ -81,6 +92,7 @@ export default function PDFPage() {
       {pdfData.buttons.map((button) => {
         const isOpen = openPanels.includes(button.id)
         const position = buttonPositions[button.id]
+        console.log('🗺️ Rendering panel for button:', { buttonId: button.id, isOpen, hasPosition: !!position })
         return (
           <AIQuestionPanel
             key={button.id}
@@ -89,6 +101,7 @@ export default function PDFPage() {
             buttonScreenPosition={position}
             customAnswerDemo={button.customAnswerDemo}
             onClose={() => handlePanelClose(button.id)}
+            pdfId={pdfData.id}
           />
         )
       })}

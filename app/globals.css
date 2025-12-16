@@ -10,7 +10,7 @@
   --card-foreground: oklch(0.2 0.01 90);
   --popover: oklch(0.98 0.005 85);
   --popover-foreground: oklch(0.2 0.01 90);
-  --primary: oklch(0.527 0.177 276.757); /* indigo-600 #4F46E5 */
+  --primary: oklch(0.747 0.156 50.177); /* orange-500 #F97316 */
   --primary-foreground: oklch(0.98 0.005 85);
   --secondary: oklch(0.635 0.237 11.985); /* rose-500 #F43F5E */
   --secondary-foreground: oklch(0.98 0.005 85);
@@ -46,7 +46,7 @@
   --card-foreground: oklch(0.92 0.005 85);
   --popover: oklch(0.18 0.01 90);
   --popover-foreground: oklch(0.92 0.005 85);
-  --primary: oklch(0.613 0.215 276.692); /* indigo-500 #6366F1 (dark mode용) */
+  --primary: oklch(0.747 0.156 50.177); /* orange-500 #F97316 (dark mode용) */
   --primary-foreground: oklch(0.98 0.005 85);
   --secondary: oklch(0.635 0.237 11.985); /* rose-500 #F43F5E */
   --secondary-foreground: oklch(0.98 0.005 85);
