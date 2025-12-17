@@ -172,6 +172,13 @@ export default function ArticlePage() {
                   onTextDragged={handleTextDragged}
                   onSelectionCleared={handleSelectionCleared}
                 />
+                        {/* AI Questions Section - 차트 생성 후에만 표시 */}
+                {showAIQuestions && (
+                  <AIQuestions
+                    predefined={article.aiQuestions?.predefined}
+                    customAnswerDemo={article.aiQuestions?.customAnswerDemo}
+                  />
+                )}
 
                 {/* Article Footer */}
                 <div className="pt-8 border-t border-border">
@@ -197,13 +204,7 @@ export default function ArticlePage() {
           </div>
         </div>
 
-        {/* AI Questions Section - 차트 생성 후에만 표시 */}
-        {showAIQuestions && (
-          <AIQuestions
-            predefined={article.aiQuestions?.predefined}
-            customAnswerDemo={article.aiQuestions?.customAnswerDemo}
-          />
-        )}
+
       </main>
 
       {/* Floating Button */}
