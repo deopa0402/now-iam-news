@@ -21,6 +21,11 @@ const nextConfig: NextConfig = {
         hostname: 'api.dicebear.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.00news.co.kr',
+        pathname: '/**',
+      },
     ],
   },
 };

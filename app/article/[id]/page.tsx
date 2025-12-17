@@ -10,6 +10,7 @@ import ArticleContent from "@/components/ArticleContent"
 import { FloatingButton } from "@/components/FloatingButton"
 import { AIQuestions } from "@/components/AIQuestions"
 import { Comments } from "@/components/Comments"
+import { PopularNews } from "@/components/PopularNews"
 import { useState } from "react"
 
 interface DragInfo {
@@ -98,19 +99,25 @@ export default function ArticlePage() {
           {/* 중앙: 카테고리 네비게이션 */}
           <nav className="hidden md:flex items-center gap-6">
             <Button variant="ghost" className="text-sm font-medium">
-              Politics
+              전체기사
             </Button>
             <Button variant="ghost" className="text-sm font-medium">
-              Business
+              정치
             </Button>
             <Button variant="ghost" className="text-sm font-medium">
-              Tech
+              경제
+            </Button>
+            <Button variant="ghost" className="text-sm font-medium text-orange-500 hover:text-orange-600">
+              사회
             </Button>
             <Button variant="ghost" className="text-sm font-medium">
-              Culture
+              라이프
             </Button>
             <Button variant="ghost" className="text-sm font-medium">
-              Sports
+              칼럼·오피니언
+            </Button>
+            <Button variant="ghost" className="text-sm font-medium">
+              포토
             </Button>
           </nav>
 
@@ -133,48 +140,62 @@ export default function ArticlePage() {
       </header>
 
       <main className="pt-16">
-        <article className="container mx-auto px-4 py-12 max-w-3xl">
-          <div className="space-y-8">
-            {/* Article Header */}
-            <div className="space-y-6">
-              <div className="flex flex-wrap items-center gap-3 text-sm">
-                <div className="flex items-center gap-2 text-slate-600">
-                  <Calendar className="w-4 h-4" />
-                  <span>{article.date}</span>
+        <div className="container mx-auto px-4 py-12">
+          {/* 2단 레이아웃: 본문 + 인기뉴스 */}
+          <div className="flex gap-8 max-w-6xl mx-auto justify-between items-start">
+            {/* 좌측: 기사 본문 */}
+            <article className="flex-1 max-w-3xl">
+              <div className="space-y-8">
+                {/* Article Header */}
+                <div className="space-y-6">
+                  <div className="flex flex-wrap items-center gap-3 text-sm">
+                    <div className="flex items-center gap-2 text-slate-600">
+                      <Calendar className="w-4 h-4" />
+                      <span>{article.date}</span>
+                    </div>
+                    <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 rounded-full font-medium">
+                      <Tag className="w-3.5 h-3.5" />
+                      {article.category}
+                    </span>
+                    <span className="text-secondary font-semibold">{article.source}</span>
+                  </div>
+
+                  <h1 className="text-4xl md:text-5xl font-bold leading-tight text-balance">{article.title}</h1>
+
+                  <p className="text-xl text-muted-foreground leading-relaxed">{article.excerpt}</p>
                 </div>
-                <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 rounded-full font-medium">
-                  <Tag className="w-3.5 h-3.5" />
-                  {article.category}
-                </span>
-                <span className="text-secondary font-semibold">{article.source}</span>
+
+                {/* Article Content */}
+                <ArticleContent
+                  contentBlocks={contentBlocks}
+                  imageMappings={article.imageMappings}
+                  onTextDragged={handleTextDragged}
+                  onSelectionCleared={handleSelectionCleared}
+                />
+
+                {/* Article Footer */}
+                <div className="pt-8 border-t border-border">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm text-muted-foreground">
+                      <span className="font-medium text-foreground">{article.source}</span> 에서 보도
+                    </div>
+                    <Button variant="outline" asChild>
+                      <Link href="/">목록으로 돌아가기</Link>
+                    </Button>
+                  </div>
+                </div>
               </div>
 
-              <h1 className="text-4xl md:text-5xl font-bold leading-tight text-balance">{article.title}</h1>
+              {/* Comments Section - article 내부로 이동 */}
+              <Comments comments={article.comments} />
+            </article>
 
-              <p className="text-xl text-muted-foreground leading-relaxed">{article.excerpt}</p>
-            </div>
-
-            {/* Article Content */}
-            <ArticleContent
-              contentBlocks={contentBlocks}
-              imageMappings={article.imageMappings}
-              onTextDragged={handleTextDragged}
-              onSelectionCleared={handleSelectionCleared}
-            />
-
-            {/* Article Footer */}
-            <div className="pt-8 border-t border-border">
-              <div className="flex items-center justify-between">
-                <div className="text-sm text-muted-foreground">
-                  <span className="font-medium text-foreground">{article.source}</span> 에서 보도
-                </div>
-                <Button variant="outline" asChild>
-                  <Link href="/">목록으로 돌아가기</Link>
-                </Button>
-              </div>
+            {/* 우측: 인기뉴스 사이드바 */}
+            <div className="hidden lg:block w-80 flex-shrink-0">
+              <PopularNews />
             </div>
           </div>
-        </article>
+        </div>
 
         {/* AI Questions Section - 차트 생성 후에만 표시 */}
         {showAIQuestions && (
@@ -183,9 +204,6 @@ export default function ArticlePage() {
             customAnswerDemo={article.aiQuestions?.customAnswerDemo}
           />
         )}
-
-        {/* Comments Section */}
-        <Comments comments={article.comments} />
       </main>
 
       {/* Floating Button */}
