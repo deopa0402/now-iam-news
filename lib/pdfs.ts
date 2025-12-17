@@ -30,9 +30,33 @@ export interface PDFReport {
   buttons: PDFButton[]
 }
 
+// Triggerable button for pdf2 (keyword-based activation)
+export interface TriggerablePDFButton {
+  id: string
+  page: number
+  position: { x: number; y: number }
+  triggerKeyword: string
+  customAnswerDemo: {
+    answer: string
+    explanation: string
+  }
+}
+
+export interface TriggerablePDFReport {
+  id: string
+  title: string
+  pdfUrl: string
+  buttons: TriggerablePDFButton[]
+}
+
 // Import JSON files
 import pdf1Data from '@/data/pdfs/1.json'
+import pdf2Data from '@/data/pdfs/2.json'
 
 export const pdfReports: PDFReport[] = [
   pdf1Data as PDFReport,
+]
+
+export const triggerablePdfReports: TriggerablePDFReport[] = [
+  pdf2Data as TriggerablePDFReport,
 ]

@@ -3,7 +3,7 @@
 import { notFound, useParams } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowLeft, Calendar, Tag } from "lucide-react"
+import { ArrowLeft, Calendar, Tag, Search, Bookmark, Share2 } from "lucide-react"
 import { articles, type ContentBlock } from "@/lib/articles"
 import { Button } from "@/components/ui/button"
 import ArticleContent from "@/components/ArticleContent"
@@ -81,13 +81,54 @@ export default function ArticlePage() {
   return (
     <div className="min-h-screen bg-background">
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
-        <div className="container mx-auto px-4 h-16 flex items-center">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/">
-              <ArrowLeft className="w-5 h-5" />
-              <span className="sr-only">뒤로 가기</span>
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
+          {/* 좌측: 뒤로가기 + 로고 */}
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" asChild>
+              <Link href="/">
+                <ArrowLeft className="w-5 h-5" />
+                <span className="sr-only">뒤로 가기</span>
+              </Link>
+            </Button>
+            <Link href="/" className="font-bold text-lg tracking-tight hover:opacity-80 transition-opacity">
+              나지금
             </Link>
-          </Button>
+          </div>
+
+          {/* 중앙: 카테고리 네비게이션 */}
+          <nav className="hidden md:flex items-center gap-6">
+            <Button variant="ghost" className="text-sm font-medium">
+              Politics
+            </Button>
+            <Button variant="ghost" className="text-sm font-medium">
+              Business
+            </Button>
+            <Button variant="ghost" className="text-sm font-medium">
+              Tech
+            </Button>
+            <Button variant="ghost" className="text-sm font-medium">
+              Culture
+            </Button>
+            <Button variant="ghost" className="text-sm font-medium">
+              Sports
+            </Button>
+          </nav>
+
+          {/* 우측: 검색, 북마크, 공유 버튼 */}
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon">
+              <Search className="w-5 h-5" />
+              <span className="sr-only">검색</span>
+            </Button>
+            <Button variant="ghost" size="icon">
+              <Bookmark className="w-5 h-5" />
+              <span className="sr-only">북마크</span>
+            </Button>
+            <Button variant="ghost" size="icon">
+              <Share2 className="w-5 h-5" />
+              <span className="sr-only">공유</span>
+            </Button>
+          </div>
         </div>
       </header>
 

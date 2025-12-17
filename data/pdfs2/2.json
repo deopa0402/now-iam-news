@@ -1,0 +1,64 @@
+{
+  "id": "2",
+  "title": "스마트폰 사용 실태 보고서",
+  "pdfUrl": "/pdf2t.pdf",
+  "initialPage": 54,
+  "buttons": [
+    {
+      "id": "btn-54-1",
+      "page": 54,
+      "position": { "x": 470, "y": 540 },
+      "triggerKeyword": "청소년",
+      "chartImage": "/pdf2c1.png",
+      "panelConfig": {
+        "direction": "right",
+        "offsetX": 10,
+        "offsetY": 50
+      },
+      "fixedQuestions": [
+        {
+          "question": "청소년의 하루 평균 스마트폰 사용 시간은?",
+          "answer": "약 4시간 30분",
+          "explanation": "2024년 조사 결과, 청소년(13-18세)의 하루 평균 스마트폰 사용 시간은 4시간 30분으로 나타났습니다. 이는 전년 대비 약 30분 증가한 수치입니다."
+        },
+        {
+          "question": "청소년이 가장 많이 사용하는 앱 카테고리는?",
+          "answer": "SNS 및 메신저",
+          "explanation": "청소년의 65%가 SNS 및 메신저 앱에 가장 많은 시간을 할애하는 것으로 조사되었습니다. 다음으로 게임(20%), 동영상 스트리밍(10%) 순으로 나타났습니다."
+        }
+      ],
+      "customAnswerDemo": {
+        "answer": "청소년의 스마트폰 의존도가 심화되고 있습니다.",
+        "explanation": "54페이지 데이터 분석 결과, 청소년의 스마트폰 사용 시간과 중독 위험군 비율이 모두 증가 추세를 보이고 있습니다."
+      }
+    },
+    {
+      "id": "btn-54-2",
+      "page": 54,
+      "position": { "x": 470, "y": 587 },
+      "triggerKeyword": "성인",
+      "chartImage": "/pdf2c2.png",
+      "panelConfig": {
+        "direction": "right",
+        "offsetX": 10,
+        "offsetY": 30
+      },
+      "fixedQuestions": [
+        {
+          "question": "성인의 하루 평균 스마트폰 사용 시간은?",
+          "answer": "약 3시간 45분",
+          "explanation": "성인(19세 이상)의 하루 평균 스마트폰 사용 시간은 3시간 45분으로, 청소년보다는 낮지만 여전히 높은 수준입니다. 특히 20-30대는 4시간을 초과합니다."
+        },
+        {
+          "question": "성인이 주로 스마트폰을 사용하는 목적은?",
+          "answer": "정보 검색 및 업무",
+          "explanation": "성인의 경우 정보 검색(30%), 업무용 메신저(25%), SNS(20%), 뉴스 및 콘텐츠 소비(15%) 순으로 스마트폰을 활용하는 것으로 나타났습니다."
+        }
+      ],
+      "customAnswerDemo": {
+        "answer": "성인도 스마트폰 의존도가 증가하고 있습니다.",
+        "explanation": "최근 조사 결과, 성인의 스마트폰 사용 시간도 꾸준히 증가하고 있으며 특히 재택근무 확산으로 인해 업무와 여가의 경계가 모호해지면서 사용량이 더욱 늘어나는 추세입니다."
+      }
+    }
+  ]
+}
