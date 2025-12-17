@@ -300,7 +300,7 @@ export default function AIQuestionPanel({ button, isOpen, buttonScreenPosition, 
 
               return (
                 <AccordionItem key={`${button.id}-fq-${index}`} value={`item-${index}`}>
-                  <AccordionTrigger className="text-xs font-medium text-slate-700 hover:text-primary py-2">
+                  <AccordionTrigger className="text-xs font-medium text-slate-700 hover:text-primary py-2 text-left">
                     {fq.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-xs text-slate-600 space-y-2 pt-2">
