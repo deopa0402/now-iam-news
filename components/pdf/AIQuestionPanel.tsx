@@ -48,10 +48,18 @@ const streamText = async (
     const lastChar = words[i].slice(-1)
     if (lastChar === ',' || lastChar === '.') {
       delay += 100 + Math.random() * 100
+    } else if (lastChar === '。' || lastChar === '、') {
+      // 한글 문장부호 지원
+      delay += 80 + Math.random() * 80
     }
 
     if (Math.random() < 0.1) {
       delay += 150 + Math.random() * 150
+    }
+
+    // 긴 단어는 더 빠르게 처리
+    if (words[i].length > 8) {
+      delay *= 0.8
     }
 
     await new Promise(resolve => setTimeout(resolve, delay))
@@ -70,7 +78,7 @@ export default function AIQuestionPanel({ button, isOpen, buttonScreenPosition, 
   const [streamingQAIndex, setStreamingQAIndex] = useState<number | null>(null)
   const [streamingQAAnswers, setStreamingQAAnswers] = useState<Record<number, string>>({})
   const [streamingQAExplanations, setStreamingQAExplanations] = useState<Record<number, string>>({})
-  const [loadingQAIndex, setLoadingQAIndex] = useState<number | null>(null)
+  const [loadingQAAnswers, setLoadingQAAnswers] = useState<Record<number, boolean>>({})
 
   // Zustand store에서 패널 위치 관리
   const { getPosition, setPosition: savePosition } = usePanelPositionStore()
@@ -185,21 +193,17 @@ export default function AIQuestionPanel({ button, isOpen, buttonScreenPosition, 
   }, [isDragging, dragOffset, currentPosition, pdfId, button.id, savePosition])
 
   // 고정 QA 아코디언 열릴 때 스트리밍 시작
-  const handleAccordionChange = async (value: string) => {
-    if (!value) return // 닫힐 때는 아무것도 안 함
-
-    const index = parseInt(value.replace('item-', ''))
-
-    // 이미 스트리밍된 QA는 다시 스트리밍하지 않음
-    if (streamingQAAnswers[index]) return
+  const handleAccordionChange = async (value: string, index: number) => {
+    // 로딩 중이거나 이미 스트리밍된 QA는 다시 스트리밍하지 않음
+    if (loadingQAAnswers[index] || streamingQAAnswers[index]) return
 
     const fq = button.fixedQuestions[index]
     if (!fq) return
 
     // 로딩 시작
-    setLoadingQAIndex(index)
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    setLoadingQAIndex(null)
+    setLoadingQAAnswers(prev => ({ ...prev, [index]: true }))
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    setLoadingQAAnswers(prev => ({ ...prev, [index]: false }))
 
     // 답변 스트리밍
     await streamText(fq.answer, (text) => {
@@ -278,9 +282,19 @@ export default function AIQuestionPanel({ button, isOpen, buttonScreenPosition, 
       {/* 고정 질문 - 아코디언 */}
       {button.fixedQuestions && button.fixedQuestions.length > 0 && (
         <>
-          <Accordion type="single" collapsible className="mb-3" onValueChange={handleAccordionChange}>
+          <Accordion
+            type="single"
+            collapsible
+            className="mb-3"
+            onValueChange={(value) => {
+              if (value) {
+                const index = parseInt(value.replace('item-', ''), 10)
+                handleAccordionChange(value, index)
+              }
+            }}
+          >
             {button.fixedQuestions.map((fq, index) => {
-              const isLoadingThis = loadingQAIndex === index
+              const isLoadingThis = loadingQAAnswers[index]
               const streamedAnswer = streamingQAAnswers[index]
               const streamedExplanation = streamingQAExplanations[index]
 
@@ -295,24 +309,24 @@ export default function AIQuestionPanel({ button, isOpen, buttonScreenPosition, 
                         <span className="animate-spin">⏳</span>
                         <span>생각 중...</span>
                       </div>
-                    ) : (
+                    ) : streamedAnswer ? (
                       <>
                         <div>
                           <span className="font-bold text-primary">답:</span>{' '}
                           <span className="font-medium text-slate-900">
-                            {streamedAnswer || fq.answer}
+                            {streamedAnswer}
                           </span>
                         </div>
-                        {(streamedExplanation || streamedAnswer) && (
+                        {streamedExplanation && (
                           <div className="pt-1.5 border-t border-slate-200">
                             <span className="font-bold text-slate-700">해설:</span>{' '}
                             <span className="text-slate-700 leading-relaxed whitespace-pre-line">
-                              {streamedExplanation || fq.explanation}
+                              {streamedExplanation}
                             </span>
                           </div>
                         )}
                       </>
-                    )}
+                    ) : null}
                   </AccordionContent>
                 </AccordionItem>
               )
